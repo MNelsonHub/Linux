@@ -1,0 +1,152 @@
+#!/bin/bash
+#Markus Nelson
+#CS140U WMorales Assignment 7
+#Menu7_script
+
+until [ "$answer" = "9" ] #an until loop to keep looping the program till 9 is pressed by the user.
+	do
+#The menu that the user will be able to pick an option from.
+echo -e "\nWelcome to Markus' main menu!\n"
+echo " 1. Display users currently logged in."
+echo " 2. Display a calendar for a specific month and year."
+echo " 3. Display the current directory path."
+echo " 4. Change directory."
+echo " 5. Long listing of visible files in the current directory."
+echo " 6. Display current time and date and calendar."
+echo " 7. Start the vi editor."
+echo " 8. Email a file to a user."
+echo " 9. Quit."
+
+#Asking the user to input an option.
+echo ""
+read -p "Please press a number between 1 through 9 then press your <enter> button." answer
+
+case "$answer" in
+1)
+	#Case 1 will display who is online and ask the user to press enter to continue back to the main menu.
+	#The read -n1 line is just waiting for the user to press any key then it will continue.
+
+	clear
+	who | more
+	echo -e "\nPress <enter> to go back to the main menu.\n"
+	read -n1
+	clear
+	;;
+2)
+	#Case 2 will ask the user for a day, month, and a year. Then the program will create a calendar for that date.
+	#Using the cal command and using user input to create the variables I need. 
+	#using the same read -n1 command from before to go back to the main menu.
+
+	clear
+	echo "Please enter in the day you want to look at and then press <enter>"
+	read userDay
+	echo -e "\nPlease enter in the month you want to look at and then press <enter>\n"
+	read userMonth
+	echo -e "\nPlease enter the year you want to look at and then press <enter>\n"
+	read userYear
+	cal "$userDay" "$userMonth" "$userYear"	
+	echo -e "\nPress <enter> to go back to the main menu.\n"
+	read -n1
+	clear
+	;;
+
+3)
+	#Case 3 is using the pwd command to output the current directory path you're in.
+	#Using read -n1
+
+	clear
+	pwd
+	echo -e "\nPress <enter to go back to the main menu.\n"
+	read -n1
+	clear
+	;;
+	
+4)
+	#Case 4 will allow you to change to another directory. The user will be ased to type in what directory they wish to go to
+	#Then using the cd command, attatch the variable that the user created to move to that directory
+	#Then I displayed pwd so the user can see that they have been moved to another directory
+	#Used read -n1
+
+	clear 
+	echo "Please enter in the directory you want to go to and then press <enter>"
+	read userDirectory
+	cd "$userDirectory"
+	pwd
+	echo -e "\nPress <enter> to go back to the main menu.\n"
+	read -n1
+	clear
+	;;
+5)
+	#Case 5 will show all files in your current directory
+	#Used read -n1
+
+	clear
+	cd | ls -a | more
+	echo -e "\nPress <enter> to go back to the main menu.\n"
+	read -n1
+	clear
+	;;
+
+6)
+	#Case 6 will display the current date and calendar 
+	#Used read -n1
+	
+	clear
+	date
+	echo ""
+	cal
+	echo -e "\nPress <enter> to go back to the main menu.\n"
+	read -n1
+	clear
+	;;
+
+7)
+	#Case 7 will open or creat a vi file. The program will ask the user for the vi file which will be stored into the variable userViFile
+	#Using an if statement, the if statement will check the file (userViFile) if it is a file and if it is then it will open that file
+
+	clear
+	echo "Please enter the vi file you wish to open or create."
+	read userViFile
+	if [ -f "$userViFile" ]
+		then
+			vi "$userViFile"
+	fi
+	echo
+	clear
+	;;
+
+8)
+	#Case 8 will send a file to someone through email. The program will ask the user to enter the file they wish to send
+	#The file name will be stored into a vairable, userFile
+	#The if statement will then check if the file is a true file and if it is then it will follow through with the email program
+	#If the if statement doesn't think the file is a true file then the else statement will be displayed
+
+	clear
+	echo "Please enter the file name you want to email then press <enter>"
+	read userFile
+	if [ -f "$userFile" ]
+		then
+			echo "Please enter the subject of your email and press <enter>"
+			read subject
+			echo "Please enter the email address of the recipient and press <enter>"
+			read recipient			
+			mail -s "$subject" "$recipient" < "$userFile"
+			echo "Your message has been sent. Sending you back to the mian menu now."
+	else
+		echo -e "\nSorry. I am unable to read your file. Please try again.\n"
+		
+	fi
+	echo
+	;;
+
+9)
+	#Case 9 is how you quit	
+
+	clear
+	;;
+
+
+
+esac
+done
+
